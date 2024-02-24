@@ -3,7 +3,7 @@
 sudo apt update -y 
 
 # Install necessary tools required 
-sudo apt install -y openjdk-17-jdk maven build-essential software-properties-common git 
+sudo apt install -y openjdk-17-jdk
 
 # Add pkg key to add jenkins to apt repo list and install jenkins with apt
 sudo wget -O /usr/share/keyrings/jenkins-keyring.asc https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
