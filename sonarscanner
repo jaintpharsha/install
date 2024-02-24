@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# Define where to install SonarScanner
+SONAR_SCANNER_VERSION=4.6.2.2472
+INSTALL_DIR=/opt/sonar-scanner
+BIN_DIR=/usr/local/bin
+
+# Download SonarScanner
+wget -q https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${SONAR_SCANNER_VERSION}-linux.zip -O /tmp/sonar-scanner-cli.zip
+
+# Create installation directory
+sudo mkdir -p ${INSTALL_DIR}
+
+# Unzip SonarScanner to the installation directory
+sudo unzip -q /tmp/sonar-scanner-cli.zip -d ${INSTALL_DIR}
+
+# Remove the downloaded zip to clean up space
+rm /tmp/sonar-scanner-cli.zip
+
+# Rename the unzipped directory to a generic name to avoid version in path
+SONAR_SCANNER_DIR=$(find ${INSTALL_DIR} -maxdepth 1 -type d -name "sonar-scanner-*")
+sudo mv ${SONAR_SCANNER_DIR} ${INSTALL_DIR}/sonar-scanner
+
+# Add SonarScanner bin to the PATH in /etc/profile.d so it's available for all users
+echo "export PATH=\$PATH:${INSTALL_DIR}/sonar-scanner/bin" | sudo tee /etc/profile.d/sonar-scanner.sh
+
+# Optionally, create a symlink for ease of use (requires /usr/local/bin in PATH)
+sudo ln -sfn ${INSTALL_DIR}/sonar-scanner/bin/sonar-scanner ${BIN_DIR}/sonar-scanner
+
+echo "SonarScanner installation is complete."
+echo "Please logout and login again or source /etc/profile.d/sonar-scanner.sh to update your PATH."
