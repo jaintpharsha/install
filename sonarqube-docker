@@ -14,7 +14,6 @@ docker volume create --name sonarqube_extensions
 
 docker run -d --name sonarqube \
     -p 9000:9000 \
-    -e SONAR_JDBC_URL=... \
     -e SONAR_JDBC_USERNAME=admin \
     -e SONAR_JDBC_PASSWORD=admin \
     -v sonarqube_data:/opt/sonarqube/data \
