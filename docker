@@ -11,6 +11,11 @@ echo \
 sudo apt-get update -y
 sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin docker-compose
 
+# Add current user to the docker group
 sudo usermod -aG docker $USER
-newgrp docker
-exit
+
+# Enable Docker to start on boot
+sudo systemctl enable docker
+
+# Start Docker service in case it's not running
+sudo systemctl start docker
