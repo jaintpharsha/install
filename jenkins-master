@@ -32,3 +32,6 @@ fi
 # Display the status of the Jenkins service regardless
 echo "Current status of Jenkins service:"
 sudo systemctl status jenkins --no-pager
+
+#run the below command to use this script in raw mode 
+# curl -s 
