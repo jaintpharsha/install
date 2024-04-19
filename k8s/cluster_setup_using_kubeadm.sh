@@ -47,7 +47,7 @@ fi
 echo -e "\n-------------------------- Updating OS --------------------------\n"
 sudo apt update
 echo -e "\n-------------------------- APT transport for downloading pkgs via HTTPS --------------------------\n"
-sudo apt-get install -y apt-transport-https
+sudo apt-get install -y apt-transport-https ca-certificates curl gpg
 
 sudo su - <<EOF
 echo -e "\n--------------------------  Adding K8S packgaes to APT list --------------------------\n"
@@ -74,7 +74,7 @@ sudo systemctl start docker && echo "    Docker started"
 sudo systemctl enable docker.service && echo "    docker.service enabled"
 
 echo -e "\n-------------------------- Install kubeadm, kubelet, kubectl and kubernetes-cni --------------------------\n"
-sudo apt-get install -y kubeadm kubelet kubectl kubernetes-cni
+sudo apt-get install -y kubeadm kubelet kubectl
 sudo snap install kubectx --classic
 
 if [[ "$1" == 'master' ]]; then 
@@ -96,7 +96,7 @@ echo -e "\n---------------------------------------------------------------------
 echo -e "\n-------------------------- Setiing-up Kubectl config  --------------------------\n"
 sleep 4
 mkdir -p $HOME/.kube
-sudo yes | cp -i /etc/kubernetes/admin.conf $HOME/.kube/config 
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config 
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 [[ -f "$HOME/.kube/config" ]] || echo "     Kubeconfig copied $HOME/.kube/config"
 
