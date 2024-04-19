@@ -73,9 +73,16 @@ echo -e "\n-------------------------- Starting and enabling docker.service -----
 sudo systemctl start docker && echo "    Docker started"
 sudo systemctl enable docker.service && echo "    docker.service enabled"
 
+echo -e "\n-------------------------- Download public signing key and add the Kubernetes apt repository. --------------------------\n"
+curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.29/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.29/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
+
 echo -e "\n-------------------------- Install kubeadm, kubelet, kubectl and kubernetes-cni --------------------------\n"
+sudo apt update -y
 sudo apt-get install -y kubeadm kubelet kubectl kubernetes-cni
 sudo snap install kubectx --classic
+sudo apt-mark hold kubelet kubeadm kubectl
+sudo systemctl enable --now kubelet
 
 if [[ "$1" == 'master' ]]; then 
 echo -e "\n-------------------------- Initiating kubeadm control-plane (master node) --------------------------\n"
