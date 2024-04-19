@@ -51,8 +51,8 @@ sudo apt-get install -y apt-transport-https ca-certificates curl gpg
 
 sudo su - <<EOF
 echo -e "\n--------------------------  Adding K8S packgaes to APT list --------------------------\n"
-curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
-echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
+curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.29/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.29/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
 EOF
 
 echo -e "\n-------------------------- Installing docker.io --------------------------\n"
@@ -78,49 +78,50 @@ sudo apt-get install -y kubeadm kubelet kubectl
 sudo snap install kubectx --classic
 
 if [[ "$1" == 'master' ]]; then 
-echo -e "\n-------------------------- Initiating kubeadm control-plane (master node) --------------------------\n"
-sudo su - <<EOF
-kubeadm init
-EOF
-echo "--------------------------------------------------------------------------"
-echo "       Save the above kubeadm join <token> command to run on worker node"
-echo "--------------------------------------------------------------------------"
-
-echo -e "\n-------------------------- Copy the join <token> command --------------------------\n" 
-echo "    The join command must be executed in the worker node that we intend to add to the control-plane."
-echo "      1. Better save the join command in a seperate file for future use"
-echo "      2. If the join command is lost, we can generate it using bellow command:"  
-echo "            kubeadm token create --print-join-command"
-echo -e "\n-----------------------------------------------------------------------------------\n"
-
-echo -e "\n-------------------------- Setiing-up Kubectl config  --------------------------\n"
-sleep 4
-mkdir -p $HOME/.kube
-sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config 
-sudo chown $(id -u):$(id -g) $HOME/.kube/config
-[[ -f "$HOME/.kube/config" ]] || echo "     Kubeconfig copied $HOME/.kube/config"
-
-echo -e "\n-------------------------- Install weaveworks network cni --------------------------\n"
-kubectl apply -f https://github.com/weaveworks/weave/releases/download/v2.8.1/weave-daemonset-k8s.yaml
-#kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml 
-
-echo -e "\n---------------------------------- Checking mater node status ---------------------------\n"
-kubectl get nodes
-echo -e "\n Waiting to control-plane (master node) to get Ready ...........\n"
-sleep 15
-kubectl get nodes
-echo -e "\n\n  Wait to for 5-10 minutes, if node is still not in Ready state then try to install below calico network cni "
-echo "    1. kubectl apply -f https://docs.projectcalico.org/manifests/calico-typha.yaml"
-echo "    2. kubectl get nodes"
-echo -e "\n-----------------------------------------------------------------------------------"
+    echo -e "\n-------------------------- Initiating kubeadm control-plane (master node) --------------------------\n"
+        sudo su - <<EOF
+            kubeadm init
+        EOF
+        
+    echo "--------------------------------------------------------------------------"
+    echo "       Save the above kubeadm join <token> command to run on worker node"
+    echo "--------------------------------------------------------------------------"
+    
+    echo -e "\n-------------------------- Copy the join <token> command --------------------------\n" 
+    echo "    The join command must be executed in the worker node that we intend to add to the control-plane."
+    echo "      1. Better save the join command in a seperate file for future use"
+    echo "      2. If the join command is lost, we can generate it using bellow command:"  
+    echo "            kubeadm token create --print-join-command"
+    echo -e "\n-----------------------------------------------------------------------------------\n"
+    
+    echo -e "\n-------------------------- Setiing-up Kubectl config  --------------------------\n"
+        sleep 4
+        mkdir -p $HOME/.kube
+        sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config 
+        sudo chown $(id -u):$(id -g) $HOME/.kube/config
+        [[ -f "$HOME/.kube/config" ]] || echo "     Kubeconfig copied $HOME/.kube/config"
+    
+    echo -e "\n-------------------------- Install weaveworks network cni --------------------------\n"
+        kubectl apply -f https://github.com/weaveworks/weave/releases/download/v2.8.1/weave-daemonset-k8s.yaml
+        #kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml 
+    
+    echo -e "\n---------------------------------- Checking mater node status ---------------------------\n"
+        kubectl get nodes
+        echo -e "\n Waiting to control-plane (master node) to get Ready ...........\n"
+        sleep 15
+        kubectl get nodes
+        echo -e "\n\n  Wait to for 5-10 minutes, if node is still not in Ready state then try to install below calico network cni "
+        echo "    1. kubectl apply -f https://docs.projectcalico.org/manifests/calico-typha.yaml"
+        echo "    2. kubectl get nodes"
+    echo -e "\n-----------------------------------------------------------------------------------"
 
 fi  
 
 if [[ "$1" == 'worker' ]]; then 
-echo "------------------------------------------------------------------------------------"
-echo "    1. switch to root user: sudo su -"
-echo "    2. Allow incoming traffic to port 6443 in control-plane (master node)" 
-echo "    3. Run the kubeadm join <TOKEN> command which we get from master"
-echo "    4. Run 'kubectl get nodes' on the control-plane to see this node joined the cluster."
-echo "------------------------------------------------------------------------------------"
+    echo "------------------------------------------------------------------------------------"
+    echo "    1. switch to root user: sudo su -"
+    echo "    2. Allow incoming traffic to port 6443 in control-plane (master node)" 
+    echo "    3. Run the kubeadm join <TOKEN> command which we get from master"
+    echo "    4. Run 'kubectl get nodes' on the control-plane to see this node joined the cluster."
+    echo "------------------------------------------------------------------------------------"
 fi
