@@ -51,8 +51,8 @@ sudo apt-get install -y apt-transport-https
 
 sudo su - <<EOF
 echo -e "\n--------------------------  Adding K8S packgaes to APT list --------------------------\n"
-curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add
-echo 'deb http://apt.kubernetes.io/ kubernetes-xenial main' > /etc/apt/sources.list.d/kubernetes.list
+curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
 EOF
 
 echo -e "\n-------------------------- Installing docker.io --------------------------\n"
@@ -73,16 +73,9 @@ echo -e "\n-------------------------- Starting and enabling docker.service -----
 sudo systemctl start docker && echo "    Docker started"
 sudo systemctl enable docker.service && echo "    docker.service enabled"
 
-echo -e "\n-------------------------- Download public signing key and add the Kubernetes apt repository. --------------------------\n"
-curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.29/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
-echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.29/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
-
 echo -e "\n-------------------------- Install kubeadm, kubelet, kubectl and kubernetes-cni --------------------------\n"
-sudo apt update -y
 sudo apt-get install -y kubeadm kubelet kubectl kubernetes-cni
 sudo snap install kubectx --classic
-sudo apt-mark hold kubelet kubeadm kubectl
-sudo systemctl enable --now kubelet
 
 if [[ "$1" == 'master' ]]; then 
 echo -e "\n-------------------------- Initiating kubeadm control-plane (master node) --------------------------\n"
@@ -103,13 +96,12 @@ echo -e "\n---------------------------------------------------------------------
 echo -e "\n-------------------------- Setiing-up Kubectl config  --------------------------\n"
 sleep 4
 mkdir -p $HOME/.kube
-sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config 
+sudo yes | cp -i /etc/kubernetes/admin.conf $HOME/.kube/config 
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 [[ -f "$HOME/.kube/config" ]] || echo "     Kubeconfig copied $HOME/.kube/config"
 
 echo -e "\n-------------------------- Install weaveworks network cni --------------------------\n"
 kubectl apply -f https://github.com/weaveworks/weave/releases/download/v2.8.1/weave-daemonset-k8s.yaml
-#kubectl apply -f https://docs.projectcalico.org/manifests/calico-typha.yaml 
 #kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml 
 
 echo -e "\n---------------------------------- Checking mater node status ---------------------------\n"
