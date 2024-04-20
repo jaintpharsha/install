@@ -75,7 +75,7 @@ sudo systemctl start docker && echo "    Docker started"
 sudo systemctl enable docker.service && echo "    docker.service enabled"
 
 echo -e "\n-------------------------- Install kubeadm, kubelet, kubectl and kubernetes-cni --------------------------\n"
-sudo apt-get install -y kubeadm kubelet kubectl kubernetes-cni
+sudo apt-get install -y kubeadm kubelet kubectl
 sudo snap install kubectx --classic
 
 if [[ "$1" == 'master' ]]; then 
