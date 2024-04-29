@@ -1,6 +1,6 @@
 #!/bin/bash
 if [[ "$1" == 'install' ]]; then 
-    kubectl apply -f https://raw.githubusercontent.com/jaintpharsha/Devops-ITD-Aug-2023/main/Kubernetes/Dashboard/kubernete-dashboard.yml
+    kubectl apply -f https://raw.githubusercontent.com/jaintpharsha/install/main/k8s/Dashboard/kubernete-dashboard.yml
 
     kubectl --namespace kubernetes-dashboard patch svc kubernetes-dashboard -p '{"spec": {"type": "NodePort"}}'
 
