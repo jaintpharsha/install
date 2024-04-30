@@ -44,8 +44,6 @@ spec:
     port: 443
     protocol: TCP
     targetPort: 8443
-  tls:
-    - secretName: kubernetes-dashboard-certs
   selector:
     k8s-app: kubernetes-dashboard
 
@@ -168,8 +166,8 @@ spec:
             - containerPort: 8443
               protocol: TCP
           args:
-            - --tls-cert-file=/tls.crt
-            - --tls-key-file=/tls.key
+            - --tls-cert-file=/certs/tls.crt
+            - --tls-key-file=/certs/tls.key
             - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
             - --auto-generate-certificates
             - --namespace=kubernetes-dashboard
