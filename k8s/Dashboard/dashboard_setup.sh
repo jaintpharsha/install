@@ -11,6 +11,8 @@ spec:
     port: 443
     protocol: TCP
     targetPort: 8443
+  tls:
+    - secretName: dashboard-tls
 EOF
 
     kubectl -n kubernetes-dashboard patch svc kubernetes-dashboard --patch "$(cat nodeport_dashboard_patch.yaml)"
