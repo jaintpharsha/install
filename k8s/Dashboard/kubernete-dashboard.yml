@@ -170,7 +170,6 @@ spec:
           args:
             - --tls-cert-file=/tls.crt
             - --tls-key-file=/tls.key
-            - --secure-port=8443
             - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
             - --auto-generate-certificates
             - --namespace=kubernetes-dashboard
