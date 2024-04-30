@@ -39,9 +39,13 @@ metadata:
 spec:
   type: NodePort
   ports:
-    - nodePort: 32100
-      port: 443
-      targetPort: 8443
+  - name: https
+    nodePort: 32000
+    port: 443
+    protocol: TCP
+    targetPort: 8443
+  tls:
+    - secretName: kubernetes-dashboard-certs
   selector:
     k8s-app: kubernetes-dashboard
 
@@ -166,8 +170,14 @@ spec:
           args:
             - --tls-cert-file=/tls.crt
             - --tls-key-file=/tls.key
+            - --secure-port=8443
+            - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
             - --auto-generate-certificates
             - --namespace=kubernetes-dashboard
+            - --kubelet-use-node-status-port
+            - --kubelet-insecure-tls=true
+            - --kubelet-preferred-address-types=InternalIP
+            - --metric-resolution=15s
             # Uncomment the following line to manually specify Kubernetes API server Host
             # If not specified, Dashboard will attempt to auto discover the API server and connect
             # to it. Uncomment only if the default does not work.
