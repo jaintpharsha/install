@@ -16,7 +16,7 @@ if [[ "$1" == 'install' ]]; then
     organizationName        = QProfiles' > $HOME/certs/cert.cnf
 
     openssl genrsa -des3 -passout pass:over4chars -out tls.pass.key 2048 && openssl rsa -passin pass:over4chars -in tls.pass.key -out $HOME/certs/tls.key && rm tls.pass.key
-    openssl req -new -key tls.key -out $HOME/certs/tls.csr -config $HOME/certs/cert.cnf
+    openssl req -new -key $HOME/certs/tls.key -out $HOME/certs/tls.csr -config $HOME/certs/cert.cnf
 
     openssl x509 -req -sha256 -days 365 -in $HOME/certs/tls.csr -signkey $HOME/certs/tls.key -out $HOME/certs/tls.crt
     kubectl create secret generic kubernetes-dashboard-certs --from-file=$HOME/certs -n kubernetes-dashboard
