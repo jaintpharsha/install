@@ -1,5 +1,9 @@
 #!/bin/bash
-if [[ "$1" == 'install' ]]; then 
+if [[ "$1" == 'install' ]]; then
+    openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout dashboard.key -out dashboard.crt -subj "/C=IN/CN=mydashboard"
+    kubectl create namespace kubernetes-dashboard
+    kubectl create secret tls dashboard-tls --key dashboard.key --cert dashboard.crt -n kubernetes-dashboard
+secret/dashboard-tls created
     kubectl apply -f https://raw.githubusercontent.com/jaintpharsha/install/main/k8s/Dashboard/kubernete-dashboard.yml
 
     kubectl --namespace kubernetes-dashboard patch svc kubernetes-dashboard -p '{"spec": {"type": "NodePort"}}'
