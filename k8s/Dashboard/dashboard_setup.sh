@@ -17,7 +17,7 @@ if [[ "$1" == 'install' ]]; then
     openssl req -new -key tls.key -out $HOME/certs/tls.csr -config $HOME/certs/cert.cnf
 
     openssl x509 -req -sha256 -days 365 -in $HOME/certs/tls.csr -signkey $HOME/certs/tls.key -out $HOME/certs/tls.crt
-    kubectl create secret tls kubernetes-dashboard-certs --from-file=$HOME/certs -n kubernetes-dashboard
+    kubectl create secret generic kubernetes-dashboard-certs --from-file=$HOME/certs -n kubernetes-dashboard
     #kubectl create secret tls kubernetes-dashboard-certs --key dashboard.key --cert dashboard.crt -n kubernetes-dashboard
     kubectl apply -f https://raw.githubusercontent.com/jaintpharsha/install/main/k8s/Dashboard/kubernete-dashboard.yml
     
