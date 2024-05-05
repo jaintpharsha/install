@@ -102,7 +102,8 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 [[ -f "$HOME/.kube/config" ]] || echo "     Kubeconfig copied $HOME/.kube/config"
 
 echo -e "\n-------------------------- Install weaveworks network cni --------------------------\n"
-kubectl apply -f https://github.com/weaveworks/weave/releases/download/v2.8.1/weave-daemonset-k8s.yaml
+kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+#kubectl apply -f https://github.com/weaveworks/weave/releases/download/v2.8.1/weave-daemonset-k8s.yaml
 #kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml 
 
 echo -e "\n---------------------------------- Checking mater node status ---------------------------\n"
