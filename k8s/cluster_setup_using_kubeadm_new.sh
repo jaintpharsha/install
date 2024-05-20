@@ -82,14 +82,15 @@ EOF
 sudo su - <<EOF
 echo -e "\n--------------------------  Adding K8S packgaes to APT list --------------------------\n"
 [[ -d "/etc/apt/keyrings" ]] || mkdir -p /etc/apt/keyrings
-curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmour -o /etc/apt/trusted.gpg.d/kubernetes-xenial.gpg
-apt-add-repository "deb http://apt.kubernetes.io/ kubernetes-xenial main"
+curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
 EOF
 
 
 echo -e "\n-------------------------- Install kubeadm, kubelet, kubectl and kubernetes-cni --------------------------\n"
 sudo apt update
 sudo apt install -y kubelet kubeadm kubectl
+sudo snap install kubectx --classic
 sudo apt-mark hold kubelet kubeadm kubectl
 
 if [[ "$1" == 'master' ]]; then 
