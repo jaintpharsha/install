@@ -25,16 +25,17 @@ install_kubectl() {
 	kubectl version --short --client
 }
 
+access_key=$(aws configure get aws_access_key_id)
 
-read -e -p $'Before continuing with the EKS installation, Need a IAM user with below roles \n    1. AmazonEC2FullAccess \n    2. AWSCloudFormationFullAccess \n    3. EksAllAccess \n    4. IamLimitedAccess (https://eksctl.io/usage/minimum-iam-policies/)\n\nHave you configured the AWS CLI with IAM user with above access using aws configure (y/n): ' choice
-choice=$(echo "$choice" | tr '[:upper:]' '[:lower:]')
+echo -e 'Hoping IAM user got below roles \n    1. AmazonEC2FullAccess \n    2. AWSCloudFormationFullAccess \n    3. EksAllAccess \n    4. IamLimitedAccess (https://eksctl.io/usage/minimum-iam-policies/)\n\nHave you configured the AWS CLI with IAM user with above access using aws configure: '
 
 
-if [ "$choice" = "yes" ] || [ "$choice" = "y" ]; then
+
+if [[ -n $access_key ]]; then
     install_eksctl
     install_kubectl
     eksctl create cluster --name itdefined --version 1.30 --region ap-south-1 --nodegroup-name itdefined-workers --node-type t2.micro --nodes 2 --nodes-min 1 --nodes-max 3 --managed
 else
     echo "Exiting EKS installation, comeback with IAM user..."
-    # Add any cleanup or exit commands here
+    echo -e 'Need a IAM user with below roles \n    1. AmazonEC2FullAccess \n    2. AWSCloudFormationFullAccess \n    3. EksAllAccess \n    4. IamLimitedAccess (https://eksctl.io/usage/minimum-iam-policies/)\n'
 fi
