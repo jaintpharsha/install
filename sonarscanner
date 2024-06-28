@@ -1,12 +1,12 @@
 #!/bin/bash
 
 # Define where to install SonarScanner
-SONAR_SCANNER_VERSION=4.6.2.2472
+SONAR_SCANNER_VERSION=6.1.0.4477
 INSTALL_DIR=/opt/sonar-scanner
 BIN_DIR=/usr/local/bin
 
 # Download SonarScanner
-wget -q https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${SONAR_SCANNER_VERSION}-linux.zip -O /tmp/sonar-scanner-cli.zip
+wget -q https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${SONAR_SCANNER_VERSION}-linux-x64.zip -O /tmp/sonar-scanner-cli.zip
 
 # Create installation directory
 sudo mkdir -p ${INSTALL_DIR}
