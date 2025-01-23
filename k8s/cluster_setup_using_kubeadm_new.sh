@@ -62,7 +62,7 @@ EOF
 sudo sysctl --system
 echo -e "\n-------------------------- APT transport for downloading pkgs via HTTPS --------------------------\n"
 sudo apt-get update
-sudo apt-get install -y curl gnupg2 software-properties-common apt-transport-https ca-certificates curl gpg snapd
+sudo apt-get install -y gnupg2 gpg software-properties-common apt-transport-https ca-certificates curl 
 
 echo -e "\n-------------------------- Enable the Docker repository --------------------------\n"
 sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmour -o /etc/apt/trusted.gpg.d/docker.gpg
@@ -97,10 +97,7 @@ echo -e "\n-------------------------- Install extended tool for k8s - stern, kub
 curl -s -Lo /tmp/stern.tar.gz https://github.com/stern/stern/releases/download/v1.24.0/stern_1.24.0_linux_amd64.tar.gz
 tar -xvzf /tmp/stern.tar.gz -C /tmp
 sudo mv /tmp/stern /usr/local/bin/
-
-export SNAPD_DEBUG=1
-sudo systemctl enable --now snapd.socket
-sudo snap install kubectx --classic --no-wait
+sudo apt install -y kubectx
 
 
 if [[ "$1" == 'master' ]]; then 
