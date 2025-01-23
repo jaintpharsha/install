@@ -61,7 +61,8 @@ net.ipv4.ip_forward = 1
 EOF
 sudo sysctl --system
 echo -e "\n-------------------------- APT transport for downloading pkgs via HTTPS --------------------------\n"
-sudo apt-get install -y curl gnupg2 software-properties-common apt-transport-https ca-certificates
+sudo apt-get update
+sudo apt-get install -y curl gnupg2 software-properties-common apt-transport-https ca-certificates curl gpg snapd
 
 echo -e "\n-------------------------- Enable the Docker repository --------------------------\n"
 sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmour -o /etc/apt/trusted.gpg.d/docker.gpg
@@ -82,8 +83,8 @@ EOF
 sudo su - <<EOF
 echo -e "\n--------------------------  Adding K8S packgaes to APT list --------------------------\n"
 [[ -d "/etc/apt/keyrings" ]] || mkdir -p /etc/apt/keyrings
-curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
-echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
+curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.32/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.32/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
 EOF
 
 
