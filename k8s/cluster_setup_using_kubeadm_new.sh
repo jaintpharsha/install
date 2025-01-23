@@ -89,10 +89,12 @@ EOF
 
 
 echo -e "\n-------------------------- Install kubeadm, kubelet, kubectl and kubernetes-cni --------------------------\n"
-sudo apt update
+sudo apt update -y
 sudo apt install -y kubelet kubeadm kubectl
-sudo snap install kubectx --classic
 sudo apt-mark hold kubelet kubeadm kubectl
+
+echo -e "\n-------------------------- Install extended tool for k8s - kubetcx --------------------------\n"
+sudo snap install kubectx --classic
 
 if [[ "$1" == 'master' ]]; then 
 echo -e "\n-------------------------- Initiating kubeadm control-plane (master node) --------------------------\n"
