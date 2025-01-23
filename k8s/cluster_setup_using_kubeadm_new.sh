@@ -100,7 +100,7 @@ sudo mv /tmp/stern /usr/local/bin/
 
 export SNAPD_DEBUG=1
 sudo systemctl enable --now snapd.socket
-sudo snap install kubectx --classic
+sudo snap install kubectx --classic --no-wait
 
 
 if [[ "$1" == 'master' ]]; then 
