@@ -93,8 +93,13 @@ sudo apt update -y
 sudo apt install -y kubelet kubeadm kubectl
 sudo apt-mark hold kubelet kubeadm kubectl
 
-echo -e "\n-------------------------- Install extended tool for k8s - kubetcx --------------------------\n"
+echo -e "\n-------------------------- Install extended tool for k8s - stern, kubetcx --------------------------\n"
+curl -Lo -s /tmp/stern.tar.gz https://github.com/stern/stern/releases/download/v1.24.0/stern_1.24.0_linux_amd64.tar.gz
+tar -xvzf /tmp/stern.tar.gz -C /tmp
+sudo mv /tmp/stern /usr/local/bin/
+sudo systemctl enable --now snapd.socket
 sudo snap install kubectx --classic
+
 
 if [[ "$1" == 'master' ]]; then 
 echo -e "\n-------------------------- Initiating kubeadm control-plane (master node) --------------------------\n"
