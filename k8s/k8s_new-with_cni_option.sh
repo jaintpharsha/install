@@ -128,10 +128,10 @@ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 [[ -f "$HOME/.kube/config" ]] || echo "     Kubeconfig copied $HOME/.kube/config"
 
-if [[ "$2" == 'flannel' ]] || [[ -z "$2" ]]; then
+if [[ "$2" == 'flannel' ]]; then
   echo -e "\n-------------------------- Install flannel CNI Addon --------------------------\n"
   kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
-elif [[ "$2" == 'weaveworks' ]]; then
+elif [[ "$2" == 'weaveworks' ]] || [[ -z "$2" ]]; then
   echo -e "\n-------------------------- Install weaveworks  CNI Addon --------------------------\n"
   kubectl apply -f https://github.com/weaveworks/weave/releases/download/v2.8.1/weave-daemonset-k8s.yaml
 elif [[ "$2" == 'calico' ]]; then
