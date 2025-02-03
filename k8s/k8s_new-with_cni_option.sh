@@ -108,7 +108,11 @@ sudo apt install -y kubectx
 if [[ "$1" == 'master' ]]; then 
 echo -e "\n-------------------------- Initiating kubeadm control-plane (master node) --------------------------\n"
 sudo su - <<EOF
+if [[ "$2" == 'calico' ]]; then
+kubeadm init --pod-network-cidr=192.168.0.0/16
+else 
 kubeadm init
+fi
 EOF
 echo "--------------------------------------------------------------------------"
 echo "       Save the above kubeadm join <token> command to run on worker node"
